@@ -3,7 +3,7 @@
 - hosts: all
   remote_user: root
   vars:
-    NODEJS_VERSION: "8"
+    NODEJS_VERSION: "6"
     ansible_distribution_release: "xenial" #trusty
 
   tasks:
@@ -20,6 +20,26 @@
       apt:
         name: nodejs
         state: present
+
+    - name: install nginx
+      apt: name=nginx update_cache=yes
+    - name: copy nginx config file
+      copy: src=template/nginx.conf dest=/etc/nginx/sites-available/nginx.conf
+    - name: enable configuration
+      file: dest=/etc/nginx/sites-enabled/nginx.conf src=/etc/nginx/sites-available/nginx.conf state=link
+
+    - name: delete default
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+    - name: Setting Environmental Variablle for DB_HOST
+      shell: "echo $DB_HOST"
+      environment:
+        DB_HOST: 'mongodb://192.168.10.140:27017/posts'
 
     - name: Ansible copy file to remote server
       copy:

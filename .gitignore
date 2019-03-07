@@ -1,2 +1,5 @@
 .vagrant/
 ubuntu-xenial*
+app.retry
+google*
+mongo.retry

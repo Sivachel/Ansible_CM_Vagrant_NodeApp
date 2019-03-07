@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: get apt key
+    apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=EA312927
+
+  - name: add to mongodb-org-3.2.list
+    lineinfile: dest=/etc/apt/sources.list.d/mongodb-org-3.2.list line="deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" state=present create=yes
+
+  - name: install mongo db
+    apt: name=mongodb-org update_cache=yes
+
+  - name: daemon reload
+    service: name=mongod state=started daemon-reload=true
+
+  - name: start mongodb
+    service: name=mongod state=started
