@@ -36,10 +36,19 @@
     - name: restart nginx
       service: name=nginx state=restarted
 
-    - name: Setting Environmental Variablle for DB_HOST
-      shell: "echo $DB_HOST"
-      environment:
-        DB_HOST: 'mongodb://192.168.10.140:27017/posts'
+    # - name: Setting Environmental Variablle for DB_HOST
+    #   shell: "echo $DB_HOST"
+    #   environment:
+    #     DB_HOST: 'mongodb://192.168.10.140:27017/posts'
+
+    - name: populate /etc/environment
+      lineinfile:
+        dest: "/etc/environment"
+        state: present
+        # regexp: "^{{ item.key }}"
+        line: "DB_HOST=mongod://mongo:27017/posts"
+      # with_items: "{{ os_environment }}"
+
 
     - name: Ansible copy file to remote server
       copy:

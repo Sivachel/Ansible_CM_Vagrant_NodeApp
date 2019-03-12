@@ -16,10 +16,7 @@ app.get('/' , function(req , res){
 
 // connect to database
 if(process.env.DB_HOST) {
-  console.log("Database connection")
-  mongoose.connect('mongodb://database.local:27017/posts',{
-    useMongoClient: true,
-  });
+  mongoose.connect(process.env.DB_HOST);
 
   app.get("/posts" , function(req,res){
       Post.find({} , function(err, posts){
